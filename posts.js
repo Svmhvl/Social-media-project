@@ -1,5 +1,6 @@
 
 const baseUrl = "https://tarmeezacademy.com/api/v1"
+const token = localStorage.getItem("token")
 let currentPage = 1
 let lastPage = 1
 let postId = 0
@@ -157,8 +158,15 @@ function getIdOfClickedPost(id){
 }
 
 function getIdOfClickedUser(id){
-    console.log(id)
-    window.location.href = `profile.html?userid=${id}`
+
+    if(token != null){
+        window.location.href = `profile.html?userid=${id}`
+        
+    }else{
+        showLiveAlert("please login first", "danger")
+    }
+
+    
 }
 
 function getIdOfClickedPost2(id){
@@ -167,8 +175,15 @@ function getIdOfClickedPost2(id){
 }
 
 function profileClicked(){
-    let user = getCurrentUser()
-    window.location = `profile.html?userid=${user.id}`
+
+    if(token != null){
+        let user = getCurrentUser()
+        window.location = `profile.html?userid=${user.id}`
+        
+    }else{
+        showLiveAlert("please login first", "danger")
+    }
+    
 }
 
 function toggleLoader(show = true){

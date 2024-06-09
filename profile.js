@@ -2,6 +2,7 @@ const baseUrl = "https://tarmeezacademy.com/api/v1"
 let Postid = 1
 const searchParams = new URLSearchParams(window.location.search);
 const userId = searchParams.get('userid')
+const token = localStorage.getItem("token")
 showUserPosts()
 showProfileDetails()
 
@@ -57,9 +58,10 @@ function showProfileDetails(){
 }
 
 function showUserPosts(){
-    const user = localStorage.getItem("user")
-    const token = localStorage.getItem("token")
-    const userData = JSON.parse(user)
+
+    let user = getCurrentUser()
+    let idOfUser = user.id
+    
 
     axios.get(`${baseUrl}/users/${userId}/posts`)
 
@@ -68,22 +70,18 @@ function showUserPosts(){
         let postData = response.data.data
 
         console.log(postData)
-        document.getElementById("profile-posts").innerHTML = ""
-
-
         
-        
+
         for(let post of postData){
+   
+            let editBtn = ""
+            let deleteBtn = ""
 
-            console.log(userData.id)
+            
 
-
-            if(token != null && post.author.id == userData.id){
+            if(post.author.id == idOfUser){
                 editBtn = `<button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editPost" onclick="getIdOfClickedPost2(${post.id})"><i class="fa-solid fa-pen-to-square"></i> Edit</button>`
                 deleteBtn = `<button class="btn btn-danger mx-2" data-bs-toggle="modal" data-bs-target="#deletePost" onclick="getIdOfClickedPost2(${post.id})"><i class="fa-solid fa-trash-can"></i> Delete</button>`
-            }else{
-                editBtn = ""
-                deleteBtn = ""
             }
 
 
@@ -92,7 +90,7 @@ function showUserPosts(){
             <div class="card-header d-flex align-items-center">
                 <img src="${post.author.profile_image}" alt="" width="35" height="35" class="rounded-circle" id="post-user-img">
                 <b id="post-username" style="font-size: 18px;margin-left : 10px;">@${post.author.username}</b>
-                <div class="w-100 d-flex justify-content-end">
+                <div class="w-100 d-flex justify-content-end" >
                     ${editBtn}
                     ${deleteBtn}
                 </div>
@@ -124,7 +122,8 @@ function showUserPosts(){
     })
 
     .catch((error) => {
-
+       console.log(error)
+        
     })
 
 }
@@ -205,7 +204,26 @@ function getIdOfClickedPost2(id){
 
 
 function profileClicked(){
-    let user = getCurrentUser()
-    window.location = `profile.html?userid=${user.id}`
+
+    if(token != null){
+        let user = getCurrentUser()
+        window.location = `profile.html?userid=${user.id}`
+        
+    }else{
+        showLiveAlert("please login first", "danger")
+    }
+    
 }
 
+function getCurrentUser(){
+    let user = null
+    storageUser = localStorage.getItem("user")
+
+    if(storageUser != null) {
+        
+        user = JSON.parse(storageUser)
+    }
+    
+    return user
+
+}
