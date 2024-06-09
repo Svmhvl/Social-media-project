@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="logo/snslogo.png">
+    <title>Home / SNS</title>
+    <!-- font-awsome -->
+    <script src="https://kit.fontawesome.com/2b52eecd2c.js" crossorigin="anonymous"></script>
+    <!-- axios -->
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <!-- bootstrap imports -->
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+    <style>
+        body{
+            background-color: #f0ecff;
+        }
+        .btn{
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+        }
+        .card{
+            margin-top: 20px;
+
+        }
+
+        /* loader */
+        
+        .lds-roller,
+        .lds-roller div,
+        .lds-roller div:after {
+          box-sizing: border-box;
+        }
+        .lds-roller {
+          display: inline-block;
+          position: relative;
+          width: 80px;
+          height: 80px;
+        }
+        .lds-roller div {
+          animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+          transform-origin: 40px 40px;
+        }
+        .lds-roller div:after {
+          content: " ";
+          display: block;
+          position: absolute;
+          width: 7.2px;
+          height: 7.2px;
+          border-radius: 50%;
+          background: white;
+          margin: -3.6px 0 0 -3.6px;
+        }
+        .lds-roller div:nth-child(1) {
+          animation-delay: -0.036s;
+        }
+        .lds-roller div:nth-child(1):after {
+          top: 62.62742px;
+          left: 62.62742px;
+        }
+        .lds-roller div:nth-child(2) {
+          animation-delay: -0.072s;
+        }
+        .lds-roller div:nth-child(2):after {
+          top: 67.71281px;
+          left: 56px;
+        }
+        .lds-roller div:nth-child(3) {
+          animation-delay: -0.108s;
+        }
+        .lds-roller div:nth-child(3):after {
+          top: 70.90963px;
+          left: 48.28221px;
+        }
+        .lds-roller div:nth-child(4) {
+          animation-delay: -0.144s;
+        }
+        .lds-roller div:nth-child(4):after {
+          top: 72px;
+          left: 40px;
+        }
+        .lds-roller div:nth-child(5) {
+          animation-delay: -0.18s;
+        }
+        .lds-roller div:nth-child(5):after {
+          top: 70.90963px;
+          left: 31.71779px;
+        }
+        .lds-roller div:nth-child(6) {
+          animation-delay: -0.216s;
+        }
+        .lds-roller div:nth-child(6):after {
+          top: 67.71281px;
+          left: 24px;
+        }
+        .lds-roller div:nth-child(7) {
+          animation-delay: -0.252s;
+        }
+        .lds-roller div:nth-child(7):after {
+          top: 62.62742px;
+          left: 17.37258px;
+        }
+        .lds-roller div:nth-child(8) {
+          animation-delay: -0.288s;
+        }
+        .lds-roller div:nth-child(8):after {
+          top: 56px;
+          left: 12.28719px;
+        }
+        @keyframes lds-roller {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+
+        /* //loader// */
+    </style>
+</head>
+<body id="body">
+    <!-- loader -->
+      <div id="loader" style="background: grey; position: fixed; left: 0px; right: 0px;top: 0px;bottom: 0px; margin: auto auto; display: flex; justify-content: center; align-items: center;z-index: 9999;height: 100px;width: 100px; border-radius: 15px;">
+        <div class="lds-roller">
+          <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>
+      </div>  
+    <!-- //loader//  -->
+
+    <!-- ====MODALS=== -->
+    <!-- login modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="loginModalLabel">LOGIN</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <label class="col-form-label">Username:</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">@</span>
+                    <input type="text" class="form-control"  aria-label="Username" aria-describedby="basic-addon1" id="username" value="yarob122">
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label">Password:</label>
+                  <input class="form-control" id="password" type="password" value="123456">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" id="login" onclick="login()" >Login</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- //login modal// -->
+
+    <!-- Register modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="registerLabel">Register</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div>
+                <label class="col-form-label">Username:</label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">@</span>
+                    <input type="text" class="form-control"  aria-label="Username" aria-describedby="basic-addon1" id="register-username" >
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label">Name:</label>
+                  <input class="form-control" id="register-name" type="text" >
+                </div>
+                <label class="col-form-label">Profile Image:</label>
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" id="profile-picture" >
+                    <label class="input-group-text" for="inputGroupFile02" >Upload</label>
+                  </div>
+                <div class="mb-3">
+                    <label class="col-form-label">Email:</label>
+                  <input class="form-control" id="register-email" type="email" >
+                </div>
+                <div class="mb-3">
+                    <label class="col-form-label">Password:</label>
+                  <input class="form-control" id="register-password" type="password" >
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" id="register" onclick="register()" >Register</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- //Register modal// -->
+
+    <!-- Add post modal -->
+    <div class="modal fade" id="createPost" tabindex="-1" aria-labelledby="createPostLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="createPostLabel">Create a new post</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div>
+              <div class="mb-3">
+                <label class="col-form-label">Add a title:</label>
+                <input class="form-control" id="post-title" type="text" >
+              </div>
+              <div class="mb-3">
+                <textarea class="form-control" id="post-body" rows="3" style="resize: none;"></textarea>
+            </div>
+            <hr>
+              <div class="input-group mb-3">
+                  <input type="file" class="form-control" id="post-picture" >
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-success" id="register" onclick="createNewPost()" >Add Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- // Add post modal // -->
+
+    <!-- edit post modal -->
+    <div class="modal fade" id="editPost" tabindex="-1" aria-labelledby="editPostLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="editPostLabel">Edit post</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div>
+              <div class="mb-3">
+                <label class="col-form-label">Edit a title:</label>
+                <input class="form-control" id="edited-post-title" type="text" >
+              </div>
+              <div class="mb-3">
+                <textarea class="form-control" id="edited-post-body" rows="3" style="resize: none;"></textarea>
+            </div>
+            <hr>
+              <div class="input-group mb-3">
+                  <input type="file" class="form-control" id="edited-post-picture" >
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-success" id="edit" onclick="editPost()">Edit Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- // edit post modal // -->
+
+
+    <!-- delete post modal -->
+    <div class="modal fade" id="deletePost" tabindex="-1" aria-labelledby="deletePost" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="deletePost">Delete Post</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h5>Are you sure you want to delete this post?</h5>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" onclick="deletePost()">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- //delete post modal// -->
+
+    <!-- navigation bar -->
+    <div class="container">
+       <div class="d-flex justify-content-center">
+            <div class="col-9" id="nav">
+                <nav class="navbar navbar-expand-lg bg-light shadow-sm p-3 mb-5 bg-body-tertiary rounded-bottom">
+                    <div class="container-fluid">
+                        <a class="navbar-brand d-inline-block" href="home.html" style="font-weight: bold;">
+                            <img src="./logo/snslogo.png" alt="" width="45" height="45" class="rounded-circle">
+                        </a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="home.html"><i class="fa-solid fa-house"></i> Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" onclick="profileClicked()"><i class="fa-solid fa-user"></i> Profile</a>
+                                </li>
+                                </ul>
+                            <!-- FOR NON-LOGGED-IN-USERS -->
+                            <div class="d-flex justify-content-end" id="logged-out-div">
+                                <button class="btn btn-outline-success" type="submit" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+                                <button class="btn btn-outline-success mx-2" type="submit" data-bs-toggle="modal" data-bs-target="#registerModal">Register</button>
+                            </div>
+                            <!-- // FOR NON-LOGGED-IN-USERS // -->
+                            
+                            <!-- FOR LOGGED-IN-USERS -->
+                            <div class="d-flex justify-content-end" id="logged-in-div">
+                                <span id="username-profile" style="margin-right: 20px;"></span>
+                                <button class="btn btn-outline-danger mx-2 " type="submit" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                            </div>
+                            <!-- // FOR LOGGED-IN-USERS // -->
+                        </div>
+                    </div>
+                </nav>
+            </div>
+       </div>   
+    </div>
+    <!-- //navigation bar// -->
+  
+    <!-- content -->
+    <div class="container" style="margin-bottom: 50px;">
+        <div class="d-flex justify-content-center ">
+            <div class="col-9">
+                <div id="posts">
+                    <!-- post -->
+                    <!-- <div class="card shadow-sm bg-body-tertiary rounded" id="card">
+                        <div class="card-header">
+                            <img src="" alt="" width="35" height="35" class="rounded-circle border border-2" id="post-user-img">
+                            <b id="post-username">@User154</b>
+                        </div>
+                        <div class="card-body">
+                            <img src="logo/anime-aesthetic-background-gaomvj3zw7li051t.jpg" class="card-img-top rounded img-fluid" alt="" id="post-img">
+                            <h6 style="color: gray;" id="time-of-post">2 min ago</h6>
+                            <h5 class="card-title my-3" id="title">Special title treatment</h5>
+                            <p class="card-text" id="body">With supporting text below as a natural lead-in to additional content.</p>
+                            <hr>
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
+                                </svg>
+                                <span id="number-of-comments">
+                                    (3) Comments
+                                </span>
+                            </div>
+                        </div>
+                    </div> -->
+                    <!-- //post// -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- //content// -->
+
+    <!-- alerts -->
+    <div class="position-fixed bottom-0 start-0 my-5 mx-5" id="liveAlertPlaceholder">
+    </div>
+    <!-- //alerts// -->
+
+    <!-- add posts -->
+    <div class="position-fixed bottom-0 end-0 my-5 mx-5" id="add-post" >
+    </div>
+    <!-- //add posts// -->
+     
+</body>
+<script src="posts.js"></script>
+<script src="Auth.js"></script>
+</html>
